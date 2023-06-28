@@ -3,12 +3,11 @@ package ru.rsreu.lutikov.sber;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import ru.rsreu.lutikov.sber.name.Event;
-import ru.rsreu.lutikov.sber.name.Review;
-import ru.rsreu.lutikov.sber.name.Ticket;
-import ru.rsreu.lutikov.sber.name.User;
+import ru.rsreu.lutikov.sber.domain.Event;
+import ru.rsreu.lutikov.sber.domain.Review;
+import ru.rsreu.lutikov.sber.domain.Ticket;
+import ru.rsreu.lutikov.sber.domain.User;
 import ru.rsreu.lutikov.sber.repositories.EventRepository;
 import ru.rsreu.lutikov.sber.repositories.ReviewRepository;
 import ru.rsreu.lutikov.sber.repositories.TicketRepository;
@@ -56,8 +55,10 @@ public class DataInitializer implements ApplicationRunner {
             eventRepository.save(event);
 
             Ticket ticket = new Ticket(user, event);
+            ticketRepository.save(ticket);
 
             Review review = new Review(user, event, "test");
+            reviewRepository.save(review);
         }
 
 

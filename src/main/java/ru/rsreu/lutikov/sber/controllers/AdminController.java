@@ -3,8 +3,8 @@ package ru.rsreu.lutikov.sber.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rsreu.lutikov.sber.name.Event;
-import ru.rsreu.lutikov.sber.name.User;
+import ru.rsreu.lutikov.sber.domain.Event;
+import ru.rsreu.lutikov.sber.domain.User;
 import ru.rsreu.lutikov.sber.services.EventService;
 import ru.rsreu.lutikov.sber.services.UserService;
 

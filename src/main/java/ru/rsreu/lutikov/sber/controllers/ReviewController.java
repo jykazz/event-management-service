@@ -3,7 +3,7 @@ package ru.rsreu.lutikov.sber.controllers;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.rsreu.lutikov.sber.name.Review;
+import ru.rsreu.lutikov.sber.domain.Review;
 import ru.rsreu.lutikov.sber.services.ReviewService;
 
 import java.util.List;

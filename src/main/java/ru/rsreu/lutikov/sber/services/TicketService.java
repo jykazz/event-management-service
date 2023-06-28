@@ -1,7 +1,7 @@
 package ru.rsreu.lutikov.sber.services;
 
 import org.springframework.stereotype.Service;
-import ru.rsreu.lutikov.sber.name.Ticket;
+import ru.rsreu.lutikov.sber.domain.Ticket;
 import ru.rsreu.lutikov.sber.repositories.TicketRepository;
 
 import java.util.List;

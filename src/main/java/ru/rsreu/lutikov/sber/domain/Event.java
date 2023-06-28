@@ -1,11 +1,15 @@
-package ru.rsreu.lutikov.sber.name;
+package ru.rsreu.lutikov.sber.domain;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "events")
 public class Event {
+
+    @OneToMany(mappedBy = "id")
+    private Set<Ticket> ticket;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

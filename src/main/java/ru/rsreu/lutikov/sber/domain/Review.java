@@ -1,11 +1,11 @@
-package ru.rsreu.lutikov.sber.name;
+package ru.rsreu.lutikov.sber.domain;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tickets")
-public class Ticket {
+@Table(name = "reviews")
+public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -18,12 +18,15 @@ public class Ticket {
     @JoinColumn(name = "event_id")
     private Event event;
 
-    public Ticket() {
+    private String comment;
+
+    public Review() {
     }
 
-    public Ticket(User user, Event event) {
+    public Review (User user, Event event, String comment) {
         this.user = user;
         this.event = event;
+        this.comment = comment;
     }
 
     public Long getId() {
@@ -50,13 +53,21 @@ public class Ticket {
         this.event = event;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     // Методы equals и hashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Ticket ticket = (Ticket) o;
-        return Objects.equals(id, ticket.id);
+        Review review = (Review) o;
+        return Objects.equals(id, review.id);
     }
 
     @Override
@@ -66,5 +77,3 @@ public class Ticket {
 
     // Дополнительные методы
 }
-
-

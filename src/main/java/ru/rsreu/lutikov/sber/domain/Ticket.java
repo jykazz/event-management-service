@@ -1,32 +1,37 @@
-package ru.rsreu.lutikov.sber.name;
+package ru.rsreu.lutikov.sber.domain;
+
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "reviews")
-public class Review {
+@Table(name = "tickets")
+public class Ticket {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @JsonIdentityReference(alwaysAsId = true)
+    @JsonProperty("event_id")
     private Event event;
 
-    private String comment;
-
-    public Review() {
+    public Ticket() {
     }
 
-    public Review (User user, Event event, String comment) {
+    public Ticket(User user, Event event) {
         this.user = user;
         this.event = event;
-        this.comment = comment;
     }
 
     public Long getId() {
@@ -53,21 +58,13 @@ public class Review {
         this.event = event;
     }
 
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
     // Методы equals и hashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Review review = (Review) o;
-        return Objects.equals(id, review.id);
+        Ticket ticket = (Ticket) o;
+        return Objects.equals(id, ticket.id);
     }
 
     @Override
@@ -77,3 +74,5 @@ public class Review {
 
     // Дополнительные методы
 }
+
+

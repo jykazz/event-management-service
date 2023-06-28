@@ -1,10 +1,9 @@
 package ru.rsreu.lutikov.sber.services;
 
 import org.springframework.stereotype.Service;
-import ru.rsreu.lutikov.sber.name.Event;
+import ru.rsreu.lutikov.sber.domain.Event;
 import ru.rsreu.lutikov.sber.repositories.EventRepository;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 
