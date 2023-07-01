@@ -1,0 +1,4 @@
+spring:
+security:
+  logout:
+    success-url: /home

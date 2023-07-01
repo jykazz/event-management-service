@@ -128,3 +128,31 @@ form input[type="submit"] {
 .center-table {
     margin: 0 auto; /* Устанавливает автоматические отступы по горизонтали */
 }
+
+
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.card {
+  width: 300px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #f8f8f8;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.card p {
+  margin-bottom: 10px;
+}
+
+.button-container {
+        text-align: center;
+    }

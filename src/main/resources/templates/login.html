@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="style.css">
+    <title>Мой город | Авторизация</title>
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>
+            <li><a href="/events">Мероприятия</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/tickets">Билеты</a></li>
+        </ul>
+    </nav>
+</header><main>
+    <div th:if="${param.error}" align="center">
+        Некорректный логин или пароль!
+    </div>
+    <div th:if="${param.logout}" align="center">
+        Успешный выход!
+    </div>
+    <form th:action="@{/login}" method="post">
+        <div><label> Логин : <input type="text" name="username"/> </label></div>
+        <br>
+        <div><label> Пароль: <input type="password" name="password"/> </label></div>
+        <br>
+        <div>
+            <input type="submit" value="Вход"/>
+            <input type="submit" value="Регистрация" formaction="/registration"/>
+        </div>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2023 Мой город</p>
+</footer>
+</body>
+</html>

@@ -1,6 +1,7 @@
 package ru.rsreu.lutikov.sber.domain;
 
 import javax.persistence.*;
+import java.util.Iterator;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,16 +22,22 @@ public class User {
     @Column(unique = true)
     private String email;
 
-    private String role;
+    private boolean active;
+
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set <Role> roles;
 
     public User() {
     }
 
-    public User (String username, String password, String email, String role) {
+    public User (String username, String password, String email, boolean active, Set<Role> role) {
         this.username = username;
         this.password = password;
         this.email = email;
-        this.role = role;
+        this.active = active;
+        this.roles = role;
     }
 
     public Long getId() {
@@ -65,12 +72,12 @@ public class User {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public Set<Role> getRole() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRole(Set<Role> role) {
+        this.roles = role;
     }
 
     // Методы equals и hashCode
@@ -85,6 +92,25 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public String[] getRoles() {
+        Iterator<Role> iterator = roles.iterator();
+        String[] roleArray = new String[roles.size()];
+        int i = 0;
+        while(iterator.hasNext()) {
+            roleArray[i] = iterator.next().name();
+            i++;
+        }
+        return roleArray;
     }
 
     // Дополнительные методы

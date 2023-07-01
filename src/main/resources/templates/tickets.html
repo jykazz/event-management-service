@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Мой город | Билеты</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <nav>
+    <ul>
+      <li><a href="/">Главная</a></li>
+      <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>
+      <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>
+      <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>
+      <li><a href="/events">Мероприятия</a></li>
+      <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/tickets">Билеты</a></li>
+    </ul>
+  </nav>
+</header>
+<main>
+  <div class="card-container">
+    <!-- Генерация карточек на основе данных JSON -->
+    <div th:each="yourData : ${yourDataList}" class="card">
+      <h3 th:text="${yourData.id}"></h3>
+      <p th:text="${yourData.user.getUsername()}"></p>
+      <p th:text="${yourData.event.getEventName()}"></p>
+    </div>
+  </div>
+</main>
+<footer>
+  <p>&copy; 2023 Мой город</p>
+</footer>
+</body>
+</html>

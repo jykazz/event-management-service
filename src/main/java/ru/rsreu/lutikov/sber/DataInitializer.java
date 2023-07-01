@@ -4,16 +4,16 @@
 //import org.springframework.boot.ApplicationArguments;
 //import org.springframework.boot.ApplicationRunner;
 //import org.springframework.stereotype.Component;
-//import ru.rsreu.lutikov.sber.domain.Event;
-//import ru.rsreu.lutikov.sber.domain.Review;
-//import ru.rsreu.lutikov.sber.domain.Ticket;
-//import ru.rsreu.lutikov.sber.domain.User;
+//import ru.rsreu.lutikov.sber.domain.*;
 //import ru.rsreu.lutikov.sber.repositories.EventRepository;
 //import ru.rsreu.lutikov.sber.repositories.ReviewRepository;
 //import ru.rsreu.lutikov.sber.repositories.TicketRepository;
 //import ru.rsreu.lutikov.sber.repositories.UserRepository;
 //
 //import java.time.LocalDateTime;
+//import java.util.Collections;
+//import java.util.HashSet;
+//import java.util.Set;
 //
 //@Component
 //public class DataInitializer implements ApplicationRunner {
@@ -40,11 +40,11 @@
 //    public void run(ApplicationArguments args) {
 //        // Инициализация данных
 //        for (int i = 0; i < 10; i++) {
-//            String username = "test " + Integer.toString(i);
+//            String username = "test" + Integer.toString(i);
 //            String password = "test";
 //            String email = "test-" + Integer.toString(i) + "@test.ru";
-//            String role = "USER";
-//            User user = new User(username, password, email, role);
+//            Boolean active = true;
+//            User user = new User(username, password, email, active, Collections.singleton(Role.ADMIN));
 //            userRepository.save(user);
 //
 //
