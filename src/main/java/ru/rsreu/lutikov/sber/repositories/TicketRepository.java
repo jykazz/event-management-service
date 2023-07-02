@@ -10,5 +10,7 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
     List<Ticket> findAll();
 
+    List<Ticket> findByUserId(Long userId);
+
     // Дополнительные методы
 }

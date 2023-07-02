@@ -1,5 +1,7 @@
 package ru.rsreu.lutikov.sber.domain;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.Set;
@@ -18,6 +20,7 @@ public class Event {
 
     private String eventDescription;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private LocalDateTime eventDateTime;
 
     public Event() {

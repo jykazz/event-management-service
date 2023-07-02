@@ -2,8 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>Мой город</title>
+    <title>Мой город | Пользователи</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,17 +20,23 @@
     </nav>
 </header>
 <main>
-    <section>
-        <h1>Добро пожаловать на главную страницу проекта "Мой город"!</h1>
-        <p>Здесь вы можете узнать о городских мероприятиях.</p>
-    </section>
-    <section>
-        <h2>Контакты</h2>
-        <ul>
-            <li><a href="mailto:mail@mail.ru">mail@mail.ru</a></li>
-            <li><a href="https://test">Тест</a></li>
-        </ul>
-    </section>
+    <div th:if="${#request.isUserInRole('ADMIN')}">
+        <a class="edit-button" th:href="@{'/users/new'}">Добавить</a>
+    </div>
+    <br>
+    <div class="card-container">
+        <!-- Генерация карточек на основе данных JSON -->
+        <div th:each="yourData : ${yourDataList}" class="card">
+            <h3 th:text="${yourData.username}"></h3>
+            <p th:text="${yourData.email}"></p>
+            <p th:text="${yourData.active}"></p>
+            <p th:text="${yourData.role}"></p>
+            <div th:if="${#request.isUserInRole('ADMIN')}">
+                <a class="edit-button" th:href="@{'/users/' + ${yourData.id} + '/edit'}">Редактировать</a>
+                <a class="edit-button" th:href="@{'/users/' + ${yourData.id} + '/delete'}">Удалить</a>
+            </div>
+        </div>
+    </div>
 </main>
 <footer>
     <p>&copy; 2023 Мой город</p>

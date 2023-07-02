@@ -57,21 +57,42 @@
     <nav>
         <ul>
             <li><a href="/">Главная</a></li>
-            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>
-            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>
-            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a
+                    th:href="@{/logout}">Выход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a>
+            </li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a>
+            </li>
             <li><a href="/events">Мероприятия</a></li>
-            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/tickets">Билеты</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/tickets">Билеты</a>
+            </li>
+            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/users">Пользователи</a></li>
         </ul>
     </nav>
 </header>
 <main>
+    <div th:if="${#request.isUserInRole('ADMIN')}">
+        <a class="edit-button" th:href="@{'/events/new'}">Создать</a>
+    </div>
+    <br>
     <div class="card-container">
         <!-- Генерация карточек на основе данных JSON -->
         <div th:each="yourData : ${yourDataList}" class="card">
             <h3 th:text="${yourData.eventName}"></h3>
             <p th:text="${yourData.eventDescription}"></p>
             <p th:text="${yourData.eventDateTime}"></p>
+            <div th:if="${#request.isUserInRole('ADMIN')}">
+                <a class="edit-button" th:href="@{'/events/' + ${yourData.id} + '/edit'}">Редактировать</a>
+                <a class="edit-button" th:href="@{'/events/' + ${yourData.id} + '/delete'}">Удалить</a>
+            </div>
+            <div th:if="${#request.isUserInRole('USER')}">
+                <a class="edit-button" th:href="@{'/tickets/' + ${yourData.id} + '/buy'}">Купить билет</a>
+                <a class="edit-button" th:href="@{'/reviews/' + ${yourData.id}}">Отзывы</a>
+            </div>
+            <br>
+            <div th:if="${#request.isUserInRole('USER')}">
+                <a class="edit-button" th:href="@{'/reviews/' + ${yourData.id}  + '/create'}">Написать отзыв</a>
+            </div>
         </div>
     </div>
 </main>

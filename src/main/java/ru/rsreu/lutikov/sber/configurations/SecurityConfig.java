@@ -21,12 +21,21 @@ import ru.rsreu.lutikov.sber.services.UserDetailsServiceImpl;
 
 import javax.sql.DataSource;
 
+/**
+ * Конфигурация безопасности Spring Security.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private DataSource dataSource;
 
+    /**
+     * Конфигурация доступа к различным URL-адресам и их разрешениям.
+     *
+     * @param http HttpSecurity объект для настройки доступа
+     * @throws Exception Исключение, если произошла ошибка при настройке
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -39,7 +48,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll().antMatchers("/style.css")
                 .permitAll().antMatchers("/admin/**").hasRole(Role.ADMIN.name())
                 .antMatchers("/organizer/**").hasRole(Role.ORGANIZER.name())
-                .antMatchers("/tickets").hasAnyRole(Role.ADMIN.name())
+                .antMatchers("/tickets").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .antMatchers("/events/new").hasAnyRole(Role.ADMIN.name())
+                .antMatchers("/users").hasAnyRole(Role.ADMIN.name())
+                .antMatchers("/users/**").hasAnyRole(Role.ADMIN.name())
                 .antMatchers("/reviews").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name())
                 .antMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name())
                 .anyRequest()
@@ -54,6 +66,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll();
     }
 
+    /**
+     * Bean для создания PasswordEncoder для шифрования паролей.
+     *
+     * @return PasswordEncoder объект для шифрования паролей
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -74,11 +91,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .authoritiesByUsernameQuery("select u.username, ur.roles as role from users u inner join user_role ur on u.id = ur.user_id where u.username=?");
 //    }
 
+    /**
+     * Bean для создания UserDetailsService для работы с данными пользователей.
+     *
+     * @return UserDetailsService объект для работы с данными пользователей
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
     }
 
+    /**
+     * Конфигурация AuthenticationManagerBuilder для аутентификации пользователей.
+     *
+     * @param auth AuthenticationManagerBuilder объект для настройки аутентификации
+     * @throws Exception Исключение, если произошла ошибка при настройке
+     */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());

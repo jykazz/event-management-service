@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой город | Создание мероприятия</title>
+    <link rel="stylesheet" th:href="@{/style.css}" href="../style.css">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>
+            <li><a href="/events">Мероприятия</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/tickets">Билеты</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/users">Пользователи</a></li>
+        </ul>
+    </nav>
+</header>
+<form th:object="${event}" th:action="@{/events/new}" method="post">
+    <div class="form-container-edit">
+        <div>
+            <label>Название:</label>
+            <input type="text" th:field="*{eventName}"/>
+            <span th:if="${#fields.hasErrors('eventName')}" th:errors="*{eventName}"></span>
+        </div>
+        <div>
+            <label>Описание:</label>
+            <textarea th:field="*{eventDescription}"></textarea>
+            <span th:if="${#fields.hasErrors('eventDescription')}" th:errors="*{eventDescription}"></span>
+        </div>
+        <div>
+            <label>Дата и врeмя:</label>
+            <input type="datetime-local" th:field="*{eventDateTime}"/>
+            <span th:if="${#fields.hasErrors('eventDateTime')}" th:errors="*{eventDateTime}"></span>
+        </div>
+        <div>
+            <input type="submit" value="Создать"/>
+        </div>
+    </div>
+</form>
+<footer>
+    <p>&copy; 2023 Мой город</p>
+</footer>
+</body>
+</html>

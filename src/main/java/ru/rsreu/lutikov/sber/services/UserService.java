@@ -47,6 +47,14 @@ public class UserService {
         return false;
     }
 
+    public Long getUserIdByUsername(String username) {
+        User user = userRepository.findByUsername(username);
+        if (user != null) {
+            return user.getId();
+        }
+        return null; // или можно выбрасывать исключение, если пользователя не существует
+    }
+
     // Другие методы
 
 }

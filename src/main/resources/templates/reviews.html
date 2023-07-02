@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>Мой город</title>
+    <meta charset="UTF-8">
+    <title>Мой город | Отзывы</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/style.css}" href="../style.css">
 </head>
 <body>
 <header>
@@ -21,17 +21,13 @@
     </nav>
 </header>
 <main>
-    <section>
-        <h1>Добро пожаловать на главную страницу проекта "Мой город"!</h1>
-        <p>Здесь вы можете узнать о городских мероприятиях.</p>
-    </section>
-    <section>
-        <h2>Контакты</h2>
-        <ul>
-            <li><a href="mailto:mail@mail.ru">mail@mail.ru</a></li>
-            <li><a href="https://test">Тест</a></li>
-        </ul>
-    </section>
+    <div class="card-container">
+        <!-- Генерация карточек на основе данных JSON -->
+        <div th:each="yourData : ${yourDataList}" class="card">
+            <h3 th:text="${yourData.user.getUsername()}"></h3>
+            <p th:text="${yourData.comment}"></p>
+        </div>
+    </div>
 </main>
 <footer>
     <p>&copy; 2023 Мой город</p>

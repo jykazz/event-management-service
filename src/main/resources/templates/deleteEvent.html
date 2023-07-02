@@ -2,9 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="utf-8">
-    <title>Мой город</title>
+    <meta charset="UTF-8">
+    <title>Мой город | Удаление мероприятия</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/style.css}" href="../style.css">
 </head>
 <body>
 <header>
@@ -20,19 +21,10 @@
         </ul>
     </nav>
 </header>
-<main>
-    <section>
-        <h1>Добро пожаловать на главную страницу проекта "Мой город"!</h1>
-        <p>Здесь вы можете узнать о городских мероприятиях.</p>
-    </section>
-    <section>
-        <h2>Контакты</h2>
-        <ul>
-            <li><a href="mailto:mail@mail.ru">mail@mail.ru</a></li>
-            <li><a href="https://test">Тест</a></li>
-        </ul>
-    </section>
-</main>
+<form th:action="@{/events/{eventId}/delete(eventId=${eventId})}" method="post" class="delete-form">
+    <input type="hidden" name="_method" value="DELETE">
+    <button type="submit" class="edit-button">Удалить</button>
+</form>
 <footer>
     <p>&copy; 2023 Мой город</p>
 </footer>

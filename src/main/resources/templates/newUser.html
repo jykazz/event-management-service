@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой город | Добавление пользователя</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/style.css}" href="../style.css">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a
+                    th:href="@{/logout}">Выход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a>
+            </li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a>
+            </li>
+            <li><a href="/events">Мероприятия</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/tickets">Билеты</a>
+            </li>
+            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/users">Пользователи</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <form th:object="${user}" th:action="@{/users/new}" method="post">
+        <div>
+            <label>Имя пользователя:</label>
+            <input type="text" name="username" required/>
+        </div>
+        <div>
+            <label>Пароль:</label>
+            <input type="password" name="password" required/>
+        </div>
+        <div>
+            <label>Email:</label>
+            <input type="email" name="email" required/>
+        </div>
+        <div>
+            <label>Роль:</label>
+            <select name="role" required>
+                <option value="" disabled selected>Выберите роль</option>
+                <option value="ADMIN">Администратор</option>
+                <option value="USER">Пользователь</option>
+            </select>
+        </div>
+        <div>
+            <label>Статус активации:</label>
+            <select name="active" required>
+                <option value="true">Активен</option>
+                <option value="false">Неактивен</option>
+            </select>
+        </div>
+        <div>
+            <input type="submit" value="Добавить"/>
+        </div>
+    </form>
+</main>
+<footer>
+    <p>&copy; 2023 Мой город</p>
+</footer>
+</body>
+</html>

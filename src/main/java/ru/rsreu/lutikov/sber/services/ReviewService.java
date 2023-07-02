@@ -27,6 +27,10 @@ public class ReviewService {
         return reviewRepository.findAll();
     }
 
+    public List<Review> getReviewsByEventId(Long eventId) {
+        return reviewRepository.findByEventId(eventId);
+    }
+
     public Review updateReview(Long id, Review review) {
         Review existingReview = reviewRepository.findById(id).orElse(null);
         if (existingReview != null) {

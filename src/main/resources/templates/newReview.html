@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-  <title>Мой город | Билеты</title>
+    <meta charset="UTF-8">
+    <title>Мой город | Написание отзыва</title>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" th:href="@{/style.css}" href="../style.css">
 </head>
 <body>
 <header>
@@ -20,14 +21,19 @@
   </nav>
 </header>
 <main>
-  <div class="card-container">
-    <!-- Генерация карточек на основе данных JSON -->
-    <div th:each="yourData : ${yourDataList}" class="card">
-      <h3 th:text="${yourData.id}"></h3>
-      <p th:text="${yourData.user.getUsername()}"></p>
-      <p th:text="${yourData.event.getEventName()}"></p>
+  <form th:object="${review}" th:action="@{'/reviews/' + ${eventId} + '/create'}" method="post">
+    <input type="hidden" th:field="*{event.id}"/>    <div class="form-container-edit">
+      <div>
+        <label>Отзыв:</label>
+        <br>
+        <textarea th:field="*{comment}"></textarea>
+        <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+      </div>
+      <div>
+        <input type="submit" value="Отправить"/>
+      </div>
     </div>
-  </div>
+  </form>
 </main>
 <footer>
   <p>&copy; 2023 Мой город</p>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Мой город | Редактирование мероприятия</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" th:href="@{/style.css}" href="../style.css">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/">Главная</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>
+            <li><a href="/events">Мероприятия</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/tickets">Билеты</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/users">Пользователи</a></li>
+        </ul>
+    </nav>
+</header>
+<form th:object="${user}" th:action="@{'/users/' + ${userId} + '/edit(userId=${userId})'}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+
+    <div class="form-container-edit">
+        <div>
+            <label>Имя пользователя:</label>
+            <input type="text" th:field="*{username}"/>
+            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+        </div>
+
+        <div>
+            <label>Пароль:</label>
+            <input type="password" name="password" required/>
+        </div>
+
+        <div>
+            <label>Email:</label>
+            <input type="email" th:field="*{email}"/>
+            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+        </div>
+
+        <div>
+            <label>Роль:</label>
+            <select name="role" required>
+                <option value="" disabled selected>Выберите роль</option>
+                <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">Администратор</option>
+                <option value="USER" th:selected="${user.role == 'USER'}">Пользователь</option>
+            </select>
+        </div>
+
+        <div>
+            <label>Статус активации:</label>
+            <select name="active" required>
+                <option value="true" th:selected="${user.active}">Активен</option>
+                <option value="false" th:selected="${!user.active}">Неактивен</option>
+            </select>
+        </div>
+
+        <div>
+            <input type="submit" value="Сохранить"/>
+        </div>
+    </div>
+</form>
+<footer>
+    <p>&copy; 2023 Мой город</p>
+</footer>
+</body>
+</html>
