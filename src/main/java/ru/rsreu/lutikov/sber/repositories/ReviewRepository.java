@@ -12,5 +12,7 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByEventId(Long eventId);
 
+    List<Review> findByUserId(Long userId);
+
     // Дополнительные методы
 }

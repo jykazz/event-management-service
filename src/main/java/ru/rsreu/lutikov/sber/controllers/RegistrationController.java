@@ -35,7 +35,7 @@ public class RegistrationController {
         }
 
         user.setActive(true);
-        user.setRole(Collections.singleton(Role.ADMIN));
+        user.setRole(Collections.singleton(Role.USER));
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
         userRepository.save(user);

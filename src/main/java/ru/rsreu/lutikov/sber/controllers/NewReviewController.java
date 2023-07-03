@@ -64,4 +64,51 @@ public class NewReviewController {
         return "redirect:/events";
     }
 
+    @GetMapping("/user/reviews")
+    public String viewUserReviews(Model model, Principal principal) {
+        String username = principal.getName();
+        Long id = userService.getUserIdByUsername(username);
+
+        List<Review> userReviews = reviewService.getReviewsByUserId(id);
+        model.addAttribute("userReviews", userReviews);
+
+        return "userReviews";
+    }
+
+
+    @GetMapping("/user/reviews/{reviewId}/edit")
+    public String editReviewForm(@PathVariable Long reviewId, Model model) {
+        Review review = reviewService.getReviewById(reviewId);
+        if (review != null) {
+            model.addAttribute("review", review);
+            return "editReview";
+        } else {
+            return "redirect:/user/reviews";
+        }
+    }
+
+    @PostMapping("/user/reviews/{reviewId}/edit")
+    public String editReview(@ModelAttribute("review") Review editedReview, @PathVariable("reviewId") Long reviewId) {
+        Review review = reviewService.getReviewById(reviewId);
+        if (review != null) {
+            review.setComment(editedReview.getComment());
+            reviewService.updateReview(reviewId, review);
+        }
+        return "redirect:/user/reviews";
+    }
+
+    @GetMapping("/user/reviews/{reviewId}/delete")
+    public String deleteReviewForm(@PathVariable Long reviewId, Model model) {
+        Review review = reviewService.getReviewById(reviewId);
+        model.addAttribute("review", review);
+        return "deleteReview";
+    }
+
+    @PostMapping("/user/reviews/{reviewId}/delete")
+    public String deleteReviewForm(@PathVariable("reviewId") Long reviewId) {
+        reviewService.deleteReview(reviewId);
+
+        return "redirect:/user/reviews"; // Перенаправление на страницу с пользователями после удаления
+    }
+
 }

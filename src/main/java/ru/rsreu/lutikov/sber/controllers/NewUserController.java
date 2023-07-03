@@ -14,6 +14,7 @@ import ru.rsreu.lutikov.sber.domain.Event;
 import ru.rsreu.lutikov.sber.domain.User;
 import ru.rsreu.lutikov.sber.services.UserService;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -78,6 +79,56 @@ public class NewUserController {
         userService.deleteUser(userId);
 
         return "redirect:/users"; // Перенаправление на страницу с пользователями после удаления
+    }
+
+    @GetMapping("/user/profile")
+    public String userProfile(Model model, Principal principal) {
+        String username = principal.getName();
+        Long userId = userService.getUserIdByUsername(username);
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        return "userProfile";
+    }
+
+    @GetMapping("/user/profile/edit")
+    public String editUserProfileForm(Model model, Principal principal) {
+        String username = principal.getName();
+        Long userId = userService.getUserIdByUsername(username);
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        return "editUserProfile";
+    }
+
+    @PostMapping("/user/profile/edit")
+    public String editUserProfile(@ModelAttribute("user") User editedUser, Principal principal) {
+        String username = principal.getName();
+        Long userId = userService.getUserIdByUsername(username);
+        User user = userService.getUserById(userId);
+        user.setEmail(editedUser.getEmail());
+        userService.updateUser(userId, user);
+        return "redirect:/user/profile";
+    }
+
+    @GetMapping("/user/profile/password")
+    public String changeUserPasswordForm(Model model, Principal principal) {
+        String username = principal.getName();
+        Long userId = userService.getUserIdByUsername(username);
+        User user = userService.getUserById(userId);
+        model.addAttribute("user", user);
+        return "changePassword";
+    }
+
+    @PostMapping("/user/profile/password")
+    public String changePassword(@ModelAttribute("user") User editedUser, Principal principal) {
+        String username = principal.getName();
+        Long userId = userService.getUserIdByUsername(username);
+        User user = userService.getUserById(userId);
+
+        String encodedPassword = passwordEncoder.encode(editedUser.getPassword());
+        user.setPassword(encodedPassword);
+        userService.updateUser(userId, user);
+
+        return "redirect:/user/profile";
     }
 
 

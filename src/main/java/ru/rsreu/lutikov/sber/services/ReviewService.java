@@ -2,6 +2,7 @@ package ru.rsreu.lutikov.sber.services;
 
 import org.springframework.stereotype.Service;
 import ru.rsreu.lutikov.sber.domain.Review;
+import ru.rsreu.lutikov.sber.domain.User;
 import ru.rsreu.lutikov.sber.repositories.ReviewRepository;
 
 import java.util.List;
@@ -48,6 +49,10 @@ public class ReviewService {
             return true;
         }
         return false;
+    }
+
+    public List<Review> getReviewsByUserId(Long id) {
+        return reviewRepository.findByUserId(id);
     }
 
     // Другие методы
