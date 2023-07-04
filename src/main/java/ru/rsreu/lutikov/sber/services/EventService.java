@@ -1,5 +1,8 @@
 package ru.rsreu.lutikov.sber.services;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import ru.rsreu.lutikov.sber.domain.Event;
 import ru.rsreu.lutikov.sber.repositories.EventRepository;
@@ -45,6 +48,15 @@ public class EventService {
             return true;
         }
         return false;
+    }
+
+    public Page<Event> getAllEvents(Pageable pageable) {
+        return eventRepository.findAll(pageable);
+    }
+
+    public Page<Event> getPaginatedEvents(int page, int pageSize) {
+        PageRequest pageRequest = PageRequest.of(page - 1, pageSize);
+        return eventRepository.findAll(pageRequest);
     }
 
     // Другие методы

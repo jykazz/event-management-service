@@ -23,49 +23,29 @@
         </ul>
     </nav>
 </header>
-<form th:object="${user}" th:action="@{'/users/' + ${userId} + '/edit(userId=${userId})'}" method="post">
-    <input type="hidden" th:field="*{id}"/>
-
-    <div class="form-container-edit">
+<main>
+    <form th:object="${event}" th:action="@{/events/{eventId}/edit(eventId=${eventId})}" method="post">
+        <input type="hidden" th:field="*{id}"/>
         <div>
-            <label>Имя пользователя:</label>
-            <input type="text" th:field="*{username}"/>
-            <span th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></span>
+            <label>Event Name:</label>
+            <input type="text" th:field="*{eventName}"/>
+            <span th:if="${#fields.hasErrors('eventName')}" th:errors="*{eventName}"></span>
         </div>
-
         <div>
-            <label>Пароль:</label>
-            <input type="password" name="password" required/>
+            <label>Event Description:</label>
+            <textarea th:field="*{eventDescription}"></textarea>
+            <span th:if="${#fields.hasErrors('eventDescription')}" th:errors="*{eventDescription}"></span>
         </div>
-
         <div>
-            <label>Email:</label>
-            <input type="email" th:field="*{email}"/>
-            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></span>
+            <label>Event Date and Time:</label>
+            <input type="datetime-local" th:field="*{eventDateTime}"/>
+            <span th:if="${#fields.hasErrors('eventDateTime')}" th:errors="*{eventDateTime}"></span>
         </div>
-
         <div>
-            <label>Роль:</label>
-            <select name="role" required>
-                <option value="" disabled selected>Выберите роль</option>
-                <option value="ADMIN" th:selected="${user.role == 'ADMIN'}">Администратор</option>
-                <option value="USER" th:selected="${user.role == 'USER'}">Пользователь</option>
-            </select>
+            <input type="submit" value="Save"/>
         </div>
-
-        <div>
-            <label>Статус активации:</label>
-            <select name="active" required>
-                <option value="true" th:selected="${user.active}">Активен</option>
-                <option value="false" th:selected="${!user.active}">Неактивен</option>
-            </select>
-        </div>
-
-        <div>
-            <input type="submit" value="Сохранить"/>
-        </div>
-    </div>
-</form>
+    </form>
+</main>
 <footer>
     <p>&copy; 2023 Мой город</p>
 </footer>

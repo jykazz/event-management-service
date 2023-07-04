@@ -1,50 +1,3 @@
-<!--<!DOCTYPE html>-->
-<!--<html xmlns="http://www.w3.org/1999/xhtml"-->
-<!--      xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Мой город | Мероприятия</title>-->
-<!--    <link rel="stylesheet" href="style.css">-->
-<!--</head>-->
-<!--<body>-->
-<!--<header>-->
-<!--    <nav>-->
-<!--        <ul>-->
-<!--            <li><a href="/">Главная</a></li>-->
-<!--            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>-->
-<!--            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>-->
-<!--            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>-->
-<!--            <li><a href="/events">Мероприятия</a></li>-->
-<!--            <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/tickets">Билеты</a></li>-->
-<!--        </ul>-->
-<!--    </nav>-->
-<!--</header>-->
-<!--<main>-->
-<!--    <table class="center-table">-->
-<!--        <thead>-->
-<!--        <tr>-->
-<!--            <th> ID</th>-->
-<!--            <th> Название события</th>-->
-<!--            <th> Описание события</th>-->
-<!--            <th> Дата и время события</th>-->
-<!--        </tr>-->
-<!--        </thead>-->
-<!--        <tbody>-->
-<!--        &lt;!&ndash; Генерация строк таблицы на основе данных JSON &ndash;&gt;-->
-<!--        <tr th:each="yourData : ${yourDataList}">-->
-<!--            <td th:text="${yourData.id}"></td>-->
-<!--            <td th:text="${yourData.eventName}"></td>-->
-<!--            <td th:text="${yourData.eventDescription}"></td>-->
-<!--            <td th:text="${yourData.eventDateTime}"></td>-->
-<!--        </tr>-->
-<!--        </tbody>-->
-<!--    </table>-->
-<!--</main>-->
-<!--<footer>-->
-<!--    <p>&copy; 2023 Мой город</p>-->
-<!--</footer>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
@@ -57,11 +10,15 @@
     <nav>
         <ul>
             <li><a href="/">Главная</a></li>
-            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a th:href="@{/logout}">Выход</a></li>
-            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a></li>
-            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a
+                    th:href="@{/logout}">Выход</a></li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/login">Вход</a>
+            </li>
+            <li th:unless="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/registration">Регистрация</a>
+            </li>
             <li><a href="/events">Мероприятия</a></li>
-            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/tickets">Билеты</a></li>
+            <li th:if="${#request.isUserInRole('ADMIN') || #request.isUserInRole('USER')}"><a href="/tickets">Билеты</a>
+            </li>
             <li th:if="${#request.isUserInRole('ADMIN')}"><a href="/users">Пользователи</a></li>
             <li th:if="${#request.isUserInRole('USER')}"><a href="/user/reviews">Отзывы</a></li>
             <li th:if="${#request.isUserInRole('USER')}"><a href="/user/profile">Личный кабинет</a></li>
@@ -69,6 +26,10 @@
     </nav>
 </header>
 <main>
+    <form class="search-form" th:action="@{/events}" method="get">
+        <input type="text" name="search" placeholder="Поиск мероприятий">
+        <button type="submit">Искать</button>
+    </form>
     <div th:if="${#request.isUserInRole('ADMIN')}">
         <a class="edit-button" th:href="@{'/events/new'}">Создать</a>
     </div>
@@ -78,7 +39,9 @@
         <div th:each="yourData : ${yourDataList}" class="card">
             <h3 th:text="${yourData.eventName}"></h3>
             <p th:text="${yourData.eventDescription}"></p>
-            <p th:text="${yourData.eventDateTime}"></p>
+<!--            <p th:text="${yourData.eventDateTime}"></p>-->
+            <p th:text="${#temporals.format(yourData.eventDateTime, 'dd.MM.yyyy')}"></p>
+            <p th:text="${#temporals.format(yourData.eventDateTime, 'HH:mm')}"></p>
             <div th:if="${#request.isUserInRole('ADMIN')}">
                 <a class="edit-button" th:href="@{'/events/' + ${yourData.id} + '/edit'}">Редактировать</a>
                 <a class="edit-button" th:href="@{'/events/' + ${yourData.id} + '/delete'}">Удалить</a>
@@ -93,6 +56,23 @@
             </div>
         </div>
     </div>
+
+    <div class="pagination">
+        <ul>
+            <li th:if="${currentPage > 1}">
+                <a th:href="@{/events(page=${currentPage - 1})}">&laquo; Предыдущая</a>
+            </li>
+            <li th:each="pageNumber : ${#numbers.sequence(1, totalPages)}"
+                th:class="${pageNumber == currentPage} ? 'active' : ''">
+                <a th:href="@{/events(page=${pageNumber})}" th:text="${pageNumber}"></a>
+            </li>
+            <li th:if="${currentPage < totalPages}">
+                <a th:href="@{/events(page=${currentPage + 1})}">Следующая &raquo;</a>
+            </li>
+        </ul>
+    </div>
+
+
 </main>
 <footer>
     <p>&copy; 2023 Мой город</p>

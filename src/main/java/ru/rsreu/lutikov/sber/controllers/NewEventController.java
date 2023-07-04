@@ -1,6 +1,8 @@
 package ru.rsreu.lutikov.sber.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,12 +21,48 @@ public class NewEventController {
     @Autowired
     private EventRepository eventRepository;
 
+//    @GetMapping("/events")
+//    public String events(Model model) {
+//        List<Event> yourDataList = eventService.getAllEvents(); // Получение данных JSON
+//        model.addAttribute("yourDataList", yourDataList); // Передача данных в модель представления
+//        return "events"; // Возвращаем имя представления
+//    }
+
+//    @GetMapping("/events")
+//    public String events(@RequestParam(value = "page", defaultValue = "1") int page, Model model) {
+//        int pageSize = 9; // Количество карточек на одной странице
+//        Page<Event> eventPage = eventService.getPaginatedEvents(page, pageSize);
+//        List<Event> yourDataList = eventPage.getContent(); // Получение данных JSON
+//        model.addAttribute("yourDataList", yourDataList); // Передача данных в модель представления
+//        model.addAttribute("currentPage", page);
+//        model.addAttribute("totalPages", eventPage.getTotalPages());
+//        return "events"; // Возвращаем имя представления
+//    }
+
     @GetMapping("/events")
-    public String events(Model model) {
-        List<Event> yourDataList = eventService.getAllEvents(); // Получение данных JSON
+    public String events(@RequestParam(value = "page", defaultValue = "1") int page,
+                         @RequestParam(value = "search", required = false) String search,
+                         Model model) {
+        int pageSize = 9; // Количество карточек на одной странице
+        Page<Event> eventPage;
+
+        if (search != null && !search.isEmpty()) {
+            eventPage = eventRepository.findByEventNameContainingIgnoreCase(search, PageRequest.of(page - 1, pageSize));
+//            eventPage = eventRepository.searchEventsByName(search, PageRequest.of(page - 1, pageSize));
+        } else {
+            eventPage = eventRepository.findAll(PageRequest.of(page - 1, pageSize));
+        }
+
+        List<Event> yourDataList = eventPage.getContent(); // Получение данных JSON
         model.addAttribute("yourDataList", yourDataList); // Передача данных в модель представления
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", eventPage.getTotalPages());
         return "events"; // Возвращаем имя представления
     }
+
+
+
+
 
     @GetMapping("/events/new")
     public String createEventForm(Model model) {
