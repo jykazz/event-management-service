@@ -2,7 +2,6 @@ package ru.rsreu.lutikov.sber.services;
 
 import org.springframework.stereotype.Service;
 import ru.rsreu.lutikov.sber.domain.Review;
-import ru.rsreu.lutikov.sber.domain.User;
 import ru.rsreu.lutikov.sber.repositories.ReviewRepository;
 
 import java.util.List;

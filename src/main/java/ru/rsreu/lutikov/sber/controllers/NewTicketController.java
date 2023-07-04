@@ -1,14 +1,40 @@
+/**
+ * Controller class for handling ticket-related requests.
+ *
+ * <p>
+ * This class is responsible for handling requests related to tickets, such as viewing tickets and buying tickets.
+ * </p>
+ *
+ * <p>
+ * <strong>Author:</strong> Vadim
+ * <br>
+ * <strong>Email:</strong> blinvadik@mail.ru
+ * </p>
+ *
+ * @see org.springframework.stereotype.Controller
+ * @see org.springframework.beans.factory.annotation.Autowired
+ * @see org.springframework.security.core.Authentication
+ * @see org.springframework.ui.Model
+ * @see org.springframework.web.bind.annotation.GetMapping
+ * @see org.springframework.web.bind.annotation.PathVariable
+ * @see ru.rsreu.lutikov.sber.domain.Event
+ * @see ru.rsreu.lutikov.sber.domain.Ticket
+ * @see ru.rsreu.lutikov.sber.domain.User
+ * @see ru.rsreu.lutikov.sber.services.EventService
+ * @see ru.rsreu.lutikov.sber.services.TicketService
+ * @see ru.rsreu.lutikov.sber.services.UserService
+ * @since 2023
+ */
+
 package ru.rsreu.lutikov.sber.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import ru.rsreu.lutikov.sber.domain.Event;
-import ru.rsreu.lutikov.sber.domain.Ticket;
 import ru.rsreu.lutikov.sber.domain.Ticket;
 import ru.rsreu.lutikov.sber.domain.User;
 import ru.rsreu.lutikov.sber.services.EventService;
@@ -21,6 +47,7 @@ import java.util.List;
 
 @Controller
 public class NewTicketController {
+
     @Autowired
     private TicketService ticketService;
 
@@ -30,43 +57,50 @@ public class NewTicketController {
     @Autowired
     private EventService eventService;
 
-//    @GetMapping("/tickets")
-//    public String events(Model model) {
-//        List<Ticket> yourDataList = ticketService.getAllTickets(); // Получение данных JSON
-//        model.addAttribute("yourDataList", yourDataList); // Передача данных в модель представления
-//        return "tickets"; // Возвращаем имя представления
-//    }
-
+    /**
+     * Handles requests to the "/tickets" path.
+     *
+     * @param model            the Model object for passing data to the view
+     * @param authentication  the Authentication object representing the current authentication
+     * @return the name of the view to be rendered
+     */
     @GetMapping("/tickets")
     public String tickets(Model model, Authentication authentication) {
         List<Ticket> yourDataList;
 
         if (authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            // Если пользователь является администратором, получите все билеты
+            // If the user is an admin, retrieve all tickets
             yourDataList = ticketService.getAllTickets();
         } else if (authentication != null && authentication.getAuthorities().stream()
                 .anyMatch(a -> a.getAuthority().equals("ROLE_USER"))) {
-            // Если пользователь является обычным пользователем, получите только его собственные билеты
+            // If the user is a regular user, retrieve only their own tickets
             String user = authentication.getName();
             Long userId = userService.getUserIdByUsername(user);
             System.out.println(userId);
             yourDataList = ticketService.getTicketsByUserId(userId);
         } else {
-            // Если пользователь не аутентифицирован, обработайте эту ситуацию по вашему усмотрению
+            // If the user is not authenticated, handle this situation as desired
             yourDataList = Collections.emptyList();
         }
 
-        model.addAttribute("yourDataList", yourDataList); // Передача данных в модель представления
-        return "tickets"; // Возвращаем имя представления
+        model.addAttribute("yourDataList", yourDataList); // Pass data to the view model
+        return "tickets"; // Return the name of the view to be rendered
     }
 
+    /**
+     * Handles requests to buy a ticket for a specific event.
+     *
+     * @param eventId     the ID of the event to buy a ticket for
+     * @param principal   the Principal object representing the current authenticated user
+     * @return the redirect view name after buying the ticket
+     */
     @GetMapping("/tickets/{eventId}/buy")
     public String buyTicket(@PathVariable("eventId") Long eventId, Principal principal) {
-        // Получить имя авторизованного пользователя из Principal
+        // Get the name of the authenticated user from Principal
         String username = principal.getName();
 
-        // Получить идентификатор пользователя по его имени
+        // Get the user ID by their username
         Long userId = userService.getUserIdByUsername(username);
 
         User user = userService.getUserById(userId);
@@ -77,31 +111,8 @@ public class NewTicketController {
 
         ticketService.createTicket(ticket);
 
-
-//        // Проверить, что пользователь существует
-//        if (userId == null) {
-//            // Обработка ошибки - пользователь не найден
-//            return "error";
-//        }
-//
-//        // Получить билет по его идентификатору
-//        Ticket ticket = ticketService.getTicketById(ticketId);
-//
-//        // Проверить, что билет существует
-//        if (ticket == null) {
-//            // Обработка ошибки - билет не найден
-//            return "error";
-//        }
-//
-//        // Назначить идентификатор пользователя для билета
-//        ticket.setUser(user);
-//
-//        // Сохранить обновленный билет
-//        ticketService.updateTicket(ticketId, ticket);
-
-        // Перенаправить пользователя на страницу со списком билетов или другую страницу
+        // Redirect the user to the tickets page or another page
         return "redirect:/tickets";
     }
 
 }
-

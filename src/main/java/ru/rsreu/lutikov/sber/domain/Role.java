@@ -5,8 +5,4 @@ public enum Role {
     ORGANIZER,
     USER;
 
-//    public String getAuthority() {
-//        return "ROLE_" + this.name();
-//    }
-
 }
