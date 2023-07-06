@@ -143,9 +143,9 @@ public class NewReviewController {
      * @return the name of the view to be rendered
      */
     @GetMapping("/user/reviews/{reviewId}/edit")
-    public String editReviewForm(@PathVariable Long reviewId, Model model) {
+    public String editReviewForm(@PathVariable Long reviewId, Model model, Principal principal) {
         Review review = reviewService.getReviewById(reviewId);
-        if (review != null) {
+        if (review != null && review.getUser().getUsername().equals(principal.getName())) {
             model.addAttribute("review", review);
             return "editReview";
         } else {
