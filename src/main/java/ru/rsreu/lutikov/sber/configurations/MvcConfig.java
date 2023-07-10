@@ -27,7 +27,6 @@
  * @see org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  * @see org.springframework.web.servlet.config.annotation.CorsRegistry
  * @see org.springframework.web.servlet.config.annotation.ViewControllerRegistry
- *
  * @since 2023
  */
 package ru.rsreu.lutikov.sber.configurations;
@@ -72,9 +71,6 @@ public class MvcConfig implements WebMvcConfigurer {
      *                 used to register the view controllers
      */
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/home").setViewName("home");
-        registry.addViewController("/").setViewName("home");
-        registry.addViewController("/hello").setViewName("hello");
         registry.addViewController("/login").setViewName("login");
     }
 }

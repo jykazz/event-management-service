@@ -79,7 +79,28 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.authorizeRequests().antMatchers("/").permitAll().antMatchers("/events").permitAll().antMatchers("/registration").permitAll().antMatchers("/login").permitAll().antMatchers("/style.css").permitAll().antMatchers("/favicon.ico").permitAll().antMatchers("/admin/**").hasRole(Role.ADMIN.name()).antMatchers("/organizer/**").hasRole(Role.ORGANIZER.name()).antMatchers("/tickets").hasAnyRole(Role.ADMIN.name(), Role.USER.name()).antMatchers("/events/new").hasAnyRole(Role.ADMIN.name()).antMatchers("/users").hasAnyRole(Role.ADMIN.name()).antMatchers("/users/**").hasAnyRole(Role.ADMIN.name()).antMatchers("/reviews").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name()).antMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name()).anyRequest().authenticated().and().formLogin().loginPage("/login").permitAll().and().logout().logoutUrl("/logout").permitAll();
+        http
+                .authorizeRequests()
+                .antMatchers("/").permitAll()
+                .antMatchers("/events").permitAll()
+                .antMatchers("/registration").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/style.css").permitAll()
+                .antMatchers("/favicon.ico").permitAll()
+//                .antMatchers("/admin/**").hasRole(Role.ADMIN.name())
+                .antMatchers("/organizer/**").hasRole(Role.ORGANIZER.name())
+                .antMatchers("/tickets").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
+                .antMatchers("/events/new").hasAnyRole(Role.ADMIN.name())
+//                .antMatchers("/users").hasAnyRole(Role.ADMIN.name())
+                .antMatchers("/users/**").hasAnyRole(Role.ADMIN.name())
+                .antMatchers("/reviews").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name())
+                .antMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name())
+                .anyRequest()
+                        .authenticated()
+                    .and()
+                        .formLogin().loginPage("/login").permitAll()
+                    .and()
+                        .logout().logoutUrl("/logout").permitAll();
     }
 
     /**

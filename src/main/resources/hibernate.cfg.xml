@@ -6,10 +6,8 @@
     <session-factory>
         <!-- Конфигурация подключения к базе данных -->
         <property name="hibernate.connection.driver_class">org.postgresql.Driver</property>
-<!--        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5432/event_management</property>-->
-        <property name="hibernate.connection.url">jdbc:postgresql://localhost:5433/postgres</property>
+        <property name="hibernate.connection.url">jdbc:postgresql://db:5432/postgres</property>
         <property name="hibernate.connection.username">mac</property>
-<!--        <property name="hibernate.connection.password"></property>-->
         <property name="hibernate.connection.password">mac</property>
 
         <!-- Другие настройки Hibernate -->
