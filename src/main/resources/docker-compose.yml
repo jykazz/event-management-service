@@ -12,21 +12,21 @@ services:
       - ./data:/var/lib/postgresql/data
 
   web-1:
-    image: application
+    image: application-2
     expose:
       - 8080
     depends_on:
       - db
 
   web-2:
-    image: application
+    image: application-2
     expose:
       - 8080
     depends_on:
       - db
 
   web-3:
-    image: application
+    image: application-2
     expose:
       - 8080
     depends_on:
