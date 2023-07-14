@@ -144,57 +144,76 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.rsreu.lutikov.sber.domain.Role;
-import ru.rsreu.lutikov.sber.security.JwtAuthenticationFilter;
-import ru.rsreu.lutikov.sber.security.JwtTokenProvider;
+//import ru.rsreu.lutikov.sber.security.JwtAuthenticationFilter;
+//import ru.rsreu.lutikov.sber.security.JwtTokenProvider;
+import ru.rsreu.lutikov.sber.security.AuthTokenFilter;
 import ru.rsreu.lutikov.sber.services.UserDetailsServiceImpl;
+import ru.rsreu.lutikov.sber.security.AuthEntryPointJwt;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-
-    private final JwtTokenProvider jwtTokenProvider;
-
-//    private UsernamePasswordAuthenticationFilter usernamePasswordAuthenticationFilter;
-
-    @Autowired
-    public SecurityConfig(@Lazy JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
-    }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().and().csrf().disable()
+                .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/events").permitAll()
                 .antMatchers("/registration").permitAll()
-                .antMatchers(HttpMethod.GET, "/login").permitAll()
+                .antMatchers("/signin").permitAll()
+                .antMatchers("/login").permitAll()
                 .antMatchers("/style.css").permitAll()
                 .antMatchers("/favicon.ico").permitAll()
-//                .antMatchers("/admin/**").hasRole(Role.ADMIN.name())
                 .antMatchers("/organizer/**").hasRole(Role.ORGANIZER.name())
                 .antMatchers("/tickets").hasAnyRole(Role.ADMIN.name(), Role.USER.name())
                 .antMatchers("/events/new").hasAnyRole(Role.ADMIN.name())
-//                .antMatchers("/users").hasAnyRole(Role.ADMIN.name())
                 .antMatchers("/users/**").hasAnyRole(Role.ADMIN.name())
                 .antMatchers("/reviews").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name())
                 .antMatchers("/user/**").hasAnyRole(Role.USER.name(), Role.ADMIN.name(), Role.ORGANIZER.name())
                 .anyRequest()
                         .authenticated()
-                    .and()
-                        .formLogin().loginPage("/login").permitAll()
-                    .and()
-                        .logout().logoutUrl("/logout").permitAll();
-//        http.addFilterBefore(usernamePasswordAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        http.addFilter(new JwtAuthenticationFilter(jwtTokenProvider, authenticationManager()));
+//                .and()
+//                        .formLogin().loginPage("/login").permitAll()
+//                    .and()
+//                        .logout().logoutUrl("/logout").permitAll();
+                ;
+
+        http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService() {
+        return new UserDetailsServiceImpl();
+    }
+
+    @Autowired
+    UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private AuthEntryPointJwt unauthorizedHandler;
+
+    @Bean
+    public AuthTokenFilter authenticationJwtTokenFilter() {
+        return new AuthTokenFilter();
+    }
+
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
     }
 
     @Bean
@@ -208,12 +227,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder();
     }
 
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new UserDetailsServiceImpl();
-    }
 }
