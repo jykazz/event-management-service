@@ -11,7 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import ru.rsreu.lutikov.sber.domain.RefreshToken;
 import ru.rsreu.lutikov.sber.domain.User;
+import ru.rsreu.lutikov.sber.repositories.RefreshTokenRepository;
 import ru.rsreu.lutikov.sber.repositories.UserRepository;
 import ru.rsreu.lutikov.sber.services.UserDetailsServiceImpl;
 
@@ -27,6 +29,9 @@ public class AuthController {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -55,12 +60,20 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
+        String refreshToken = jwtUtils.generateRefreshToken(authentication);
 
         // Установка токена в cookies
         Cookie tokenCookie = new Cookie("jwt", jwt);
         tokenCookie.setMaxAge(24 * 60 * 60); // Время жизни токена в секундах (здесь 24 часа)
         tokenCookie.setPath("/");
         response.addCookie(tokenCookie);
+
+        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
+        refreshTokenCookie.setMaxAge(24 * 60 * 60); // Время жизни токена в секундах (здесь 24 часа)
+        refreshTokenCookie.setPath("/");
+        response.addCookie(refreshTokenCookie);
+        ru.rsreu.lutikov.sber.domain.User usr = userRepository.findByUsername(username);
+        refreshTokenRepository.save(new RefreshToken(refreshToken, usr));
 
         User userDetails = userRepository.findByUsername(username);
         System.out.println(jwt);

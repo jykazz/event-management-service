@@ -21,6 +21,9 @@ public class JwtUtils {
     @Value("${app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    @Value("${app.refreshExpirationMs}")
+    private int refreshExpirationMs;
+
     @Autowired
     UserRepository userRepository;
 
@@ -33,6 +36,32 @@ public class JwtUtils {
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret).compact();
     }
+
+    public String generateRefreshToken(Authentication authentication) {
+        User userPrincipal = (User) authentication.getPrincipal();
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + refreshExpirationMs);
+
+        return Jwts.builder()
+                .setSubject((userPrincipal.getUsername()))
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateRefreshToken(String username) {
+        Date now = new Date();
+        Date expiration = new Date(now.getTime() + refreshExpirationMs);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(now)
+                .setExpiration(expiration)
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
 
     public boolean validateJwtToken(String jwt) {
         try {

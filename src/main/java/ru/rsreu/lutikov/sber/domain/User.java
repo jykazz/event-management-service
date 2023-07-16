@@ -10,6 +10,9 @@ import java.util.Set;
 public class User {
     @OneToMany(mappedBy = "id")
     private Set<Ticket> ticket;
+
+    @OneToMany(mappedBy = "id")
+    private Set<RefreshToken> refreshToken;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
